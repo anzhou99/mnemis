@@ -48,8 +48,6 @@ class LLMClient:
             model=response.model,
         )
 
-        print(result)
-
         logger.debug(
             f"Done | in_tokens={result.input_tokens} | out_tokens={result.output_tokens}"
             f" | cost={result.cost_estimate:.4f}"
