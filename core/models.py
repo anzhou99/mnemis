@@ -18,7 +18,7 @@ class LLMResponse(BaseModel):
 
     @property
     def total_tokens(self) -> int:
-        return self.inout_tokens + self.output_tokens
+        return self.input_tokens + self.output_tokens
 
     @property
     def cost_estimate(self) -> float:
