@@ -8,8 +8,6 @@ client = LLMClient()
 # -----------------
 # 例子1：任务分析
 # -----------------
-
-
 class TaskAnalysis(BaseModel):
     summary: str = Field(description="用一句话概括任务")
     difficulty: Literal["easy", "medium", "hard"] = Field(description="难度评估")
@@ -110,7 +108,32 @@ def demo_agent_decision():
     # print("\n  ↑ 这就是 ReAct Agent 循环的核心，未来会深入探讨这块内容")
 
 
+# -----------------
+# 例子4：错误重试
+# -----------------
+def demo_error_recovery():
+    print("\n=== 实验：错误恢复机制 ===")
+
+    class StrictModel(BaseModel):
+        name: str = Field(description="名称")
+        count: int = Field(description="模块数量，必须是整数")
+        tags: list[str] = Field(description="标签列表")
+
+    # 故意给一个容易让 LLM 犯错的 prompt
+    result = client.structured_chat(
+        messages=[Message(
+            role="user",
+            content="产品名称：Mnemis，大约有三点几个功能模块，标签包括 AI、Agent、Python，当你输出count时，你必须输出中文的'三点二'"
+        )],
+        system="根据用户描述提前必要信息",
+        response_model=StrictModel,
+        max_retries=3,
+    )
+    print(f"  解析成功：{result}")
+
+
 if __name__ == "__main__":
     # demo_task_analysis()
-    demo_sentiment()
-    demo_agent_decision()
+    # demo_sentiment()
+    # demo_agent_decision()
+    demo_error_recovery()
