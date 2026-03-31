@@ -1,7 +1,9 @@
+from core.tools.base import ToolResult
 import anthropic
 from .config import settings
 from .models import Message, LLMResponse
 from utils.logger import get_logger
+from .tools.base import ToolCall, ToolResult, ToolSchema
 
 import json
 from typing import TypeVar, Type
@@ -150,3 +152,65 @@ class LLMClient:
                 {{ 
                 {model.model_json_schema()}
                 }}"""
+
+    def chat_with_tools(
+        self, messages: list[dict], tools: list[ToolSchema], system: str | None = None
+    ) -> tuple[list[dict], list[ToolCall]]:
+        """
+        带工具的单次 LLM 调用。
+        返回：(更新后的 messages, 模型请求的工具调用列表)
+        如果工具调用列表为空，说明模型直接给出了最终回答。
+        """
+        kwargs = {
+            "model": settings.default_model,
+            "max_tokens": settings.max_tokens,
+            "tools": [t.model_dump() for t in tools],
+            "messages": messages,
+        }
+        if system:
+            kwargs["system"] = system
+
+        logger.debug(
+            f"Tool Call | messages = {len(messages)} | tools = {[t.name for t in tools]}"
+        )
+        response = self._client.messages.create(**kwargs)
+
+        # 把 assistant 的完整回复追加到 messages
+        # 注意：必须追加 response.content（原始格式），不能只追加文本
+        assistant_message = {"role": "assistant", "content": response.content}
+        messages = messages + [assistant_message]
+
+        tool_calls = []
+        for block in response.content:
+            if block.type == "tool_use":
+                tool_calls.append(
+                    ToolCall(id=block.id, name=block.name, input=block.input)
+                )
+
+        logger.debug(
+            f"Rsponse | stop_reason={response.stop_reason}"
+            f"| tool_calls={[tc.name for tc in tool_calls]}"
+            f"| tokens={response.usage.input_tokens}in/{response.usage.output_tokens}out"
+        )
+        return messages, tool_calls
+
+    def append_tool_results(
+        self, messages: list[dict], results: list[ToolResult]
+    ) -> list[dict]:
+        """把工具执行结果追加到 messages，准备下一轮调用"""
+
+        content = []
+        for r in results:
+            content.append(
+                {
+                    "type": "tool_result",
+                    "tool_use_id": r.tool_use_id,
+                    "content": r.content,
+                }
+            )
+
+        tool_result_message = {
+            "role": "user",
+            "content": content,
+        }
+        return messages + [tool_result_message]
