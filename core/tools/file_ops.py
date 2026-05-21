@@ -28,7 +28,7 @@ READ_FILE_SCHEMA = ToolSchema(
 
 WRITE_FILE_SCHEMA = ToolSchema(
     name="write_file",
-    description="用于将内容写入本地工作区内的文件。不支持流式写入。文件不存在时自动创建，已存在时覆盖。只能写入 workspace/ 目录。",
+    description="用于将内容写入本地工作区内的文件。严格按照schema进行返回，保持数据结构一致，不要自由发挥，不要多余参数。不支持流式写入。文件不存在时自动创建，已存在时覆盖。只能写入 workspace/ 目录。",
     input_schema={
         "type": "object",
         "properties": {

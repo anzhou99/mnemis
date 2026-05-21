@@ -89,7 +89,7 @@ class MemoryDatabase:
 
     # ── Session 操作 ──────────────────────────────────────────────
     def create_session(self) -> Session:
-        session = Session(id=str(uuid.uuid4))
+        session = Session(id=str(uuid.uuid4()))
         with self._conn() as conn:
             conn.execute(
                 "INSERT INTO sessions(id,started_at) VALUES (?, ?)",
@@ -118,8 +118,8 @@ class MemoryDatabase:
     def get_recent_sessions(self, limit: int = 5) -> list[Session]:
         with self._conn() as conn:
             rows = conn.execute(
-                "SELECT * FROM sessions WHERE ened_at IS NOT NULL ORDER BY started_at DESC LIMIT ?",
-                (limit,),
+                "SELECT * FROM sessions WHERE ended_at IS NOT NULL ORDER BY started_at DESC LIMIT ?",
+                (limit,)
             ).fetchall()
         return [self._row_to_session(r) for r in rows]
 
@@ -158,7 +158,7 @@ class MemoryDatabase:
         with self._conn() as conn:
             rows = conn.execute(
                 "SELECT * FROM messages WHERE session_id=? ORDER BY created_at",
-                (session_id),
+                (session_id,),
             ).fetchall()
         return [self._row_to_message(r) for r in rows]
 

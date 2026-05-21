@@ -8,6 +8,7 @@ import 这个包会自动触发所有工具模块的加载，
 from core.tools import search      
 from core.tools import file_ops   
 from core.tools import rag_tools
+from core.tools import memory_tools  
 
 # 未来新增工具：在这里加一行 import 就够了
 # from core.tools import code_exec  

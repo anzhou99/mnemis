@@ -5,7 +5,7 @@ from typing import Literal
 
 
 class MemoryType(str, Enum):
-    PERFERENCE = "perference"  # 用户偏好：「喜欢简洁回答」
+    PREFERENCE = "preference"  # 用户偏好：「喜欢简洁回答」
     FACT = "fact"  # 关于用户的事实：「是 Python 开发者」
     BACKGROUND = "background"  # 用户背景：「在做 AI Agent 项目」
     GOAL = "goal"  # 用户目标：「想开源并商业化」

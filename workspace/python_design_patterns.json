@@ -1,0 +1,22 @@
+[
+  {
+    "name": "单例模式 (Singleton)",
+    "description": "确保一个类只有一个实例，并提供全局访问点。"
+  },
+  {
+    "name": "工厂模式 (Factory)",
+    "description": "定义一个创建对象的接口，让子类决定实例化哪个类。"
+  },
+  {
+    "name": "观察者模式 (Observer)",
+    "description": "定义对象间一对多的依赖关系，当一个对象状态改变时，所有依赖者都会收到通知。"
+  },
+  {
+    "name": "策略模式 (Strategy)",
+    "description": "定义一系列算法，把它们封装起来并可以互换使用。"
+  },
+  {
+    "name": "装饰器模式 (Decorator)",
+    "description": "动态地给对象添加额外职责，比继承更灵活。"
+  }
+]

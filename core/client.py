@@ -173,6 +173,7 @@ class LLMClient:
         logger.debug(
             f"Tool Call | messages = {len(messages)} | tools = {[t.name for t in tools]}"
         )
+
         response = self._client.messages.create(**kwargs)
 
         # 把 assistant 的完整回复追加到 messages
