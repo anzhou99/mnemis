@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent 完整成长路线图</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f5f4f0;
+    color: #1a1a18;
+    padding: 2rem 1rem;
+    min-height: 100vh;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+  h1 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #1a1a18;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #73726c;
+    margin-bottom: 24px;
+  }
+
+  .phase-card {
+    background: #ffffff;
+    border: 0.5px solid #d3d1c7;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .phase-card:hover { border-color: #888780; }
+  .phase-card.open { border-color: #b4b2a9; }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+  .phase-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500;
+    flex-shrink: 0;
+  }
+  .phase-title { font-size: 14px; font-weight: 500; color: #1a1a18; flex: 1; }
+  .phase-sub { font-size: 12px; color: #73726c; margin-top: 2px; }
+  .phase-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    font-size: 11px; padding: 2px 8px;
+    border-radius: 999px;
+    border: 0.5px solid #b4b2a9;
+    color: #5f5e5a;
+  }
+  .chevron { color: #b4b2a9; font-size: 12px; transition: transform 0.2s; }
+  .phase-card.open .chevron { transform: rotate(90deg); }
+
+  .phase-body {
+    display: none;
+    padding: 0 16px 16px;
+    border-top: 0.5px solid #d3d1c7;
+  }
+  .phase-card.open .phase-body { display: block; }
+
+  .body-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  @media (max-width: 600px) { .body-grid { grid-template-columns: 1fr; } }
+
+  .body-section h4 {
+    font-size: 11px; font-weight: 500; color: #73726c;
+    margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .body-section ul { margin: 0; padding-left: 14px; }
+  .body-section li { font-size: 13px; color: #1a1a18; margin-bottom: 4px; line-height: 1.5; }
+
+  .milestone {
+    margin-top: 10px;
+    background: #f5f4f0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #5f5e5a;
+  }
+  .milestone span { font-weight: 500; color: #1a1a18; }
+
+  .connector { width: 1px; height: 8px; background: #d3d1c7; margin: 0 auto; }
+
+  /* Dot colors */
+  .dot-0 { background: #E1F5EE; color: #0F6E56; }
+  .dot-1 { background: #E6F1FB; color: #185FA5; }
+  .dot-2 { background: #EEEDFE; color: #534AB7; }
+  .dot-3 { background: #FAEEDA; color: #854F0B; }
+  .dot-4 { background: #FAECE7; color: #993C1D; }
+  .dot-5 { background: #FBEAF0; color: #993556; }
+  .dot-6 { background: #EAF3DE; color: #3B6D11; }
+
+  footer {
+    margin-top: 24px;
+    font-size: 11px;
+    color: #b4b2a9;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>AI Agent 完整成长路线图</h1>
+  <p class="subtitle">点击各阶段展开详情 · 为独立开发者定制 · 目标：开源 + 商业化 + 技术博客</p>
+
+  <!-- P0 -->
+  <div class="phase-card" onclick="toggle(this)">
+    <div class="phase-header">
+      <div class="phase-dot dot-0">P0</div>
+      <div style="flex:1">
+        <div class="phase-title">地基 · LLM 基础与工程规范</div>
+        <div class="phase-sub">2–3 周 · 打好地基，避免后期返工</div>
+      </div>
+      <div class="phase-tags">
+        <span class="tag">Prompt Engineering</span>
+        <span class="tag">API 模式</span>
+        <span class="tag">项目架构</span>
+      </div>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <h4>核心学习内容</h4>
+          <ul>
+            <li>LLM 工作原理（Token、上下文窗口、温度）</li>
+            <li>System prompt 设计与 prompt 工程技巧</li>
+            <li>Anthropic / OpenAI API 深度使用</li>
+            <li>Python async/await、结构化输出（Pydantic）</li>
+            <li>项目工程化：环境管理、日志、错误处理</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <h4>实操目标</h4>
+          <ul>
+            <li>搭建可复用的 LLM 调用基础库</li>
+            <li>CLI 对话机器人（含多轮上下文管理）</li>
+            <li>结构化输出：让 LLM 返回可解析 JSON</li>
+            <li>制定项目代码规范与 Git 工作流</li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone">📝 <span>博客主题：</span>从 API 调用到工程化 LLM 应用——我踩过的坑</div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- P1 -->
+  <div class="phase-card" onclick="toggle(this)">
+    <div class="phase-header">
+      <div class="phase-dot dot-1">P1</div>
+      <div style="flex:1">
+        <div class="phase-title">感知 · Tool Use 与 ReAct Agent</div>
+        <div class="phase-sub">3–4 周 · Agent 的手脚：让 AI 能与世界交互</div>
+      </div>
+      <div class="phase-tags">
+        <span class="tag">Tool Use</span>
+        <span class="tag">Function Calling</span>
+        <span class="tag">ReAct</span>
+      </div>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <h4>核心学习内容</h4>
+          <ul>
+            <li>Function Calling 原理与最佳实践</li>
+            <li>工具设计：搜索、读文件、执行代码、调 API</li>
+            <li>ReAct 推理模式：Thought → Action → Observation</li>
+            <li>Agent 循环设计与终止条件控制</li>
+            <li>工具结果的可靠解析与错误恢复</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <h4>实操目标</h4>
+          <ul>
+            <li>实现一个能调用网络搜索的研究助手</li>
+            <li>支持读取本地文件、执行 Python 代码</li>
+            <li>实现 ReAct 循环（附详细步骤日志）</li>
+            <li>构建工具注册系统（可热插拔工具）</li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone">📝 <span>博客主题：</span>手把手实现 ReAct Agent——比 LangChain 更清晰的方式</div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- P2 -->
+  <div class="phase-card" onclick="toggle(this)">
+    <div class="phase-header">
+      <div class="phase-dot dot-2">P2</div>
+      <div style="flex:1">
+        <div class="phase-title">记忆 · RAG 知识库系统</div>
+        <div class="phase-sub">3–4 周 · Agent 的大脑：检索增强，突破上下文限制</div>
+      </div>
+      <div class="phase-tags">
+        <span class="tag">向量数据库</span>
+        <span class="tag">RAG</span>
+        <span class="tag">Embedding</span>
+      </div>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <h4>核心学习内容</h4>
+          <ul>
+            <li>Embedding 原理与向量相似度搜索</li>
+            <li>Chunking 策略（固定、语义、递归分割）</li>
+            <li>向量数据库实战：Qdrant / Chroma 对比</li>
+            <li>Hybrid Search：向量 + 关键词 BM25</li>
+            <li>Reranking、上下文压缩与引用溯源</li>
+            <li>高级技术：HyDE、多步 RAG、GraphRAG 简介</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <h4>实操目标</h4>
+          <ul>
+            <li>构建个人知识库（支持 PDF、网页、笔记导入）</li>
+            <li>Agent 可自动检索知识库辅助回答</li>
+            <li>实现答案带来源引用功能</li>
+            <li>评估检索质量（Recall、MRR 指标）</li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone">📝 <span>博客主题：</span>RAG 不是银弹——深度剖析检索质量与幻觉问题</div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- P3 -->
+  <div class="phase-card" onclick="toggle(this)">
+    <div class="phase-header">
+      <div class="phase-dot dot-3">P3</div>
+      <div style="flex:1">
+        <div class="phase-title">持久 · Long-term Memory 系统</div>
+        <div class="phase-sub">3–4 周 · Agent 的灵魂：跨会话记忆与自我认知</div>
+      </div>
+      <div class="phase-tags">
+        <span class="tag">情景记忆</span>
+        <span class="tag">语义记忆</span>
+        <span class="tag">记忆管理</span>
+      </div>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <h4>核心学习内容</h4>
+          <ul>
+            <li>记忆类型：情景（Episodic）、语义（Semantic）、程序（Procedural）</li>
+            <li>记忆写入策略：何时写、写什么、怎么压缩</li>
+            <li>记忆检索：相关性召回 vs. 时序优先</li>
+            <li>记忆遗忘与更新机制（防止陈旧信息干扰）</li>
+            <li>前沿：Mem0、MemGPT 架构解析</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <h4>实操目标</h4>
+          <ul>
+            <li>实现跨会话用户偏好记忆</li>
+            <li>Agent 能主动从历史对话提炼洞察</li>
+            <li>记忆数据库设计（结构化 + 向量双存储）</li>
+            <li>实现「记忆冲突」检测与合并</li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone">📝 <span>博客主题：</span>给 AI 一个长期记忆——设计一个不会忘记你的 Agent</div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- P4 -->
+  <div class="phase-card" onclick="toggle(this)">
+    <div class="phase-header">
+      <div class="phase-dot dot-4">P4</div>
+      <div style="flex:1">
+        <div class="phase-title">协作 · Multi-Agent 与 MCP 生态</div>
+        <div class="phase-sub">4–5 周 · Agent 的团队：分工协作，处理复杂任务</div>
+      </div>
+      <div class="phase-tags">
+        <span class="tag">Orchestrator</span>
+        <span class="tag">Sub-agent</span>
+        <span class="tag">MCP</span>
+        <span class="tag">Human-in-loop</span>
+      </div>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <h4>核心学习内容</h4>
+          <ul>
+            <li>Multi-Agent 架构模式：Orchestrator-Worker、Peer-to-Peer</li>
+            <li>Agent 间通信：消息传递、共享状态设计</li>
+            <li>MCP 协议深度实践（工具服务器开发）</li>
+            <li>Human-in-the-loop：何时中断请求人工确认</li>
+            <li>任务分解与并行执行（async 多 agent 协作）</li>
+            <li>前沿：A2A 协议、Agent 网络概念</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <h4>实操目标</h4>
+          <ul>
+            <li>实现「研究员 + 写作者 + 校对员」三 Agent 协作</li>
+            <li>开发自定义 MCP 工具服务器</li>
+            <li>Human-in-loop：关键决策节点插入人工审核</li>
+            <li>Agent 间传递结构化上下文（非裸文本）</li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone">📝 <span>博客主题：</span>Multi-Agent 系统实战——如何让多个 AI 真正协作而不是各说各话</div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- P5 -->
+  <div class="phase-card" onclick="toggle(this)">
+    <div class="phase-header">
+      <div class="phase-dot dot-5">P5</div>
+      <div style="flex:1">
+        <div class="phase-title">进化 · 自主规划与自我演进</div>
+        <div class="phase-sub">3–4 周 · Agent 的野心：长视野计划与自我改进</div>
+      </div>
+      <div class="phase-tags">
+        <span class="tag">长期规划</span>
+        <span class="tag">自我反思</span>
+        <span class="tag">自动优化</span>
+      </div>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <h4>核心学习内容</h4>
+          <ul>
+            <li>长视野任务规划：目标分解、依赖图、里程碑</li>
+            <li>自我反思（Self-reflection）：执行后评估与修正</li>
+            <li>提示词自动优化（DSPy / 自动 prompt 调优）</li>
+            <li>Agent 行为评估框架设计（Eval 体系）</li>
+            <li>前沿：Self-play、自主演进、Agent 自我更新</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <h4>实操目标</h4>
+          <ul>
+            <li>Agent 能自动制定多步研究计划并执行</li>
+            <li>实现执行后的自我评分与任务重试</li>
+            <li>构建 Eval 测试集评估整体系统质量</li>
+            <li>Agent 能基于反馈改进自身行为</li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone">📝 <span>博客主题：</span>会自我进化的 Agent——从执行者到思考者的架构升级</div>
+    </div>
+  </div>
+  <div class="connector"></div>
+
+  <!-- P6 -->
+  <div class="phase-card" onclick="toggle(this)">
+    <div class="phase-header">
+      <div class="phase-dot dot-6">P6</div>
+      <div style="flex:1">
+        <div class="phase-title">交付 · 全栈产品化与商业化</div>
+        <div class="phase-sub">4–6 周 · 从原型到真实产品</div>
+      </div>
+      <div class="phase-tags">
+        <span class="tag">全栈 UI</span>
+        <span class="tag">开源准备</span>
+        <span class="tag">变现路径</span>
+      </div>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <h4>核心学习内容</h4>
+          <ul>
+            <li>FastAPI + Next.js / React 全栈整合</li>
+            <li>Streaming 响应（SSE / WebSocket）</li>
+            <li>用户认证、数据隔离、API Key 管理</li>
+            <li>成本控制：Token 预算、缓存、降级策略</li>
+            <li>开源项目规范（README、Docs、贡献指南）</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <h4>实操目标</h4>
+          <ul>
+            <li>完整 Web UI：对话界面 + 知识库管理 + Agent 配置</li>
+            <li>一键部署（Docker + Railway / Fly.io）</li>
+            <li>GitHub 开源发布（含完整文档）</li>
+            <li>制定 SaaS 订阅 / API 变现方案</li>
+          </ul>
+        </div>
+      </div>
+      <div class="milestone">🚀 <span>最终产出：</span>一个可开源、可商业化、配套完整技术博客系列的 AI Agent 产品</div>
+    </div>
+  </div>
+
+  <footer>Mnemis · AI Agent 成长路线图 · 独立开发者定制版</footer>
+</div>
+
+<script>
+  function toggle(card) {
+    card.classList.toggle('open');
+  }
+</script>
+</body>
+</html>

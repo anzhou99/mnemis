@@ -30,6 +30,7 @@ class ToolResult(BaseModel):
             "types": "tool_result",
             "tool_use_id": self.tool_use_id,
             "content": self.content,
+            "is_error": False,
         }
         if self.is_error:
             result["is_error"] = True

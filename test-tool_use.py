@@ -1,23 +1,6 @@
 from core.client import LLMClient
-from core.tools.base import ToolResult
-from core.tools.search import WEB_SEARCH_SCHEMA, execute_web_search
-from core.tools.file_ops import (
-    READ_FILE_SCHEMA,
-    WRITE_FILE_SCHEMA,
-    execute_read_file,
-    execute_write_file,
-)
-
-
-# 工具 Schema 列表（告诉模型有哪些工具）
-TOOLS = [WEB_SEARCH_SCHEMA, READ_FILE_SCHEMA, WRITE_FILE_SCHEMA]
-
-# 工具执行分发表（根据工具名找到对应的执行函数）
-TOOL_EXECUTORS = {
-    "web_search": lambda args: execute_web_search(**args),
-    "read_file": lambda args: execute_read_file(**args),
-    "write_file": lambda args: execute_write_file(**args),
-}
+from core.tools.registry import get_registry
+import core.tools
 
 
 SYSTEM = """你是 Mnemis，一个 AI 研究助手。
@@ -26,6 +9,7 @@ SYSTEM = """你是 Mnemis，一个 AI 研究助手。
 
 def run_single_tool_call(user_question: str):
     """演示单次工具调用的完整流程"""
+    registry = get_registry()
     client = LLMClient()
     messages = [{"role": "user", "content": user_question}]
 
@@ -33,7 +17,7 @@ def run_single_tool_call(user_question: str):
     print("-" * 50)
 
     messages, tool_calls = client.chat_with_tools(
-        messages=messages, tools=TOOLS, system=SYSTEM
+        messages=messages, tools=registry.get_schemas(), system=SYSTEM
     )
 
     if not tool_calls:
@@ -50,14 +34,8 @@ def run_single_tool_call(user_question: str):
         print(f"\n🔧 调用工具：{tc.name}")
         print(f"   参数：{tc.input}")
 
-        executor = TOOL_EXECUTORS.get(tc.name)
-        if not executor:
-            result = ToolResult(
-                tool_use_id=tc.id, content=f"未知工具：{tc.name}", is_error=True
-            )
-        else:
-            result = executor(tc.input)
-            result.tool_use_id = tc.id
+        result = registry.execute(tc.name, tc.input)
+        result.tool_use_id = tc.id
 
         print(f"   结果：{result.content[:150]}...")
         tool_results.append(result)
@@ -65,7 +43,9 @@ def run_single_tool_call(user_question: str):
     messages = client.append_tool_results(messages, tool_results)
     print("*" * 10)
     print(messages)
-    messages, _ = client.chat_with_tools(messages=messages, tools=TOOLS, system=SYSTEM)
+    messages, _ = client.chat_with_tools(
+        messages=messages, tools=registry.get_schemas(), system=SYSTEM
+    )
 
     final_text = next(
         (b.text for b in messages[-1]["content"] if hasattr(b, "text")), ""
@@ -79,4 +59,4 @@ if __name__ == "__main__":
     run_single_tool_call("今天以太坊的价格大概是多少？")
 
     # 测试2：不需要工具的问题（看模型会不会乱用工具）
-    run_single_tool_call("用 Python 写一个快速排序函数")
+    # run_single_tool_call("用 Python 写一个快速排序函数")

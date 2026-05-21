@@ -1,7 +1,7 @@
 from tavily import TavilyClient
-from urllib3 import response
 from core.tools.base import ToolSchema, ToolResult
 from core.config import settings
+from core.tools.registry import tool
 from utils.logger import get_logger
 
 
@@ -40,6 +40,7 @@ WEB_SEARCH_SCHEMA = ToolSchema(
 # ── 执行函数（真正去调 Tavily API）────────────────────────────────
 
 
+@tool(schema=WEB_SEARCH_SCHEMA)
 def execute_web_search(query: str, max_results: int = 3) -> ToolResult:
     """
     执行网络搜索。
